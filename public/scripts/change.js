@@ -1,6 +1,3 @@
-const userInput = document.getElementById("user-input");
-const autoChangeBtn = document.getElementById("autoChange-btn");
-
 autoChangeBtn.addEventListener("click", () => {
   autoChangeBtn.classList.toggle("active");
 });
