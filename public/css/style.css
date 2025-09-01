@@ -140,11 +140,11 @@ body {
     background-color: var(--color-border);
 }
 
-#translate-btn {
+#autoChange-btn {
     border-bottom-left-radius: 15px;
 }
 
-#translate-btn.active{
+#autoChange-btn.active{
     background-color: var(--color-border);
 }
 
