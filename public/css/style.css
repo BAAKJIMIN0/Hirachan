@@ -148,9 +148,20 @@ body {
     background-color: var(--color-border);
 }
 
-#send-btn {
+#translate-btn {
     margin-left: auto;
     background-color: var(--color-theme);
+    color: var(--color-white);
+}
+
+#translate-btn:hover {
+    background-color: var(--color-button-hover);
+}
+
+
+#send-btn {
+    background-color: var(--color-theme);
+    border: none;
     border-bottom-right-radius: 15px;
     color: var(--color-white);
 }

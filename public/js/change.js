@@ -154,7 +154,7 @@ document.getElementById("toH-btn").addEventListener("click", () => {
     } else if (type === "kata") {
       converted += kataToHira(ch);
     } else {
-      converted += ch;
+      converted += mainHMap[ch] || ch;
     }
   }
   userInput.setRangeText(converted, start, end, "end");
@@ -180,7 +180,7 @@ document.getElementById("toK-btn").addEventListener("click", () => {
     } else if (type === "hira") {
       converted += hiraToKata(ch);
     } else {
-      converted += ch;
+      converted += mainKMap[ch] || ch;
     }
   }
   userInput.setRangeText(converted, start, end, "end");
