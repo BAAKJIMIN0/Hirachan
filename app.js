@@ -1,11 +1,14 @@
+// npm install express openai
 const express = require('express');
 const path = require('path');
+const { spawn } = require('child_process');
 const app = express();
 
 // 정적 파일 제공 (public 폴더)
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
-// API 예시 (GET)
+// API 예시
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
