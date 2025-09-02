@@ -17,15 +17,16 @@ app.get('/', (req, res) => {
 
 // 번역 요청
 app.post('/translate', async (req, res) => {
-  const { text } = req.body;
+  const { text, direction } = req.body;
 
   if (!text) {
     return res.status(400).json({ error: '텍스트가 존재하지 않습니다.' })
   }
   
   try {
-    const translation = await translateGpt(text);
+    const translation = await translateGpt(text, direction);
     res.json({ 
+      direction: direction,
       original: text,
       translation: translation
     });

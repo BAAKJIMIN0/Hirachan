@@ -73,7 +73,10 @@ function simulateTyping(fullText, speed = 20, callback) {
 }
 
 // 사용자 메시지 전송
-translateBtn.addEventListener("click", async() => {
+translateKorToJpBtn.addEventListener("click", () => translate("kr-to-jp"));
+translateJpToKorBtn.addEventListener("click", () => translate("jp-to-kr"));
+
+async function translate(direction) {
     const message = userInput.value.trim();
     if (message === "") {
         alert("메시지를 입력해주세요.");
@@ -103,19 +106,19 @@ translateBtn.addEventListener("click", async() => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ text: message }),
+            body: JSON.stringify({
+                text: message,
+                direction: direction
+            }),
         });
         const data = await response.json();
-        if (data.translation) {
-            simulateTyping(data.translation);
-        } else  {
-            simulateTyping("번역 실패");
-        }
+        simulateTyping(data.translation || "번역 실패");
+
     }catch (err) {
             console.error(err);
-            simulateTyping("API 요청 오류");
+            simulateTyping("API 요청 오류" + err.message);
     }
-});
+}
 
 // 초기 로드
 loadChatFromLocalStorage();
