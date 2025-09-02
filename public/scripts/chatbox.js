@@ -73,7 +73,7 @@ function simulateTyping(fullText, speed = 20, callback) {
 }
 
 // 사용자 메시지 전송
-sendBtn.addEventListener("click", () => {
+translateBtn.addEventListener("click", async() => {
     const message = userInput.value.trim();
     if (message === "") {
         alert("메시지를 입력해주세요.");
@@ -97,8 +97,24 @@ sendBtn.addEventListener("click", () => {
 
     saveChatToLocalStorage();
 
-    // 봇 응답 (typing)
-    simulateTyping(`TEST: ${message}`);
+    try {
+        const response = await fetch("/translate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: message }),
+        });
+        const data = await response.json();
+        if (data.translation) {
+            simulateTyping(data.translation);
+        } else  {
+            simulateTyping("번역 실패");
+        }
+    }catch (err) {
+            console.error(err);
+            simulateTyping("API 요청 오류");
+    }
 });
 
 // 초기 로드
