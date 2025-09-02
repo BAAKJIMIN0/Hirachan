@@ -72,7 +72,7 @@ function simulateTyping(fullText, speed = 20, callback) {
     typeNextChar();
 }
 
-// 사용자 메시지 전송
+// 한일/일한 번역
 translateKorToJpBtn.addEventListener("click", () => translate("kr-to-jp"));
 translateJpToKorBtn.addEventListener("click", () => translate("jp-to-kr"));
 
@@ -83,7 +83,6 @@ async function translate(direction) {
         return;
     }
 
-    // 사용자 메시지 생성
     const userMessageElement = document.createElement("div");
     userMessageElement.classList.add("message", "sent");
 
@@ -93,6 +92,7 @@ async function translate(direction) {
 
     userMessageElement.appendChild(textElement);
     chatContainer.appendChild(userMessageElement);
+    userMessageElement.scrollIntoView({ behavior: "smooth" });
     chatContainer.scrollTop = chatContainer.scrollHeight;
 
     userInput.value = "";
@@ -119,6 +119,50 @@ async function translate(direction) {
             simulateTyping("API 요청 오류" + err.message);
     }
 }
+
+sendBtn.addEventListener("click", async() => {
+    const message = userInput.value.trim();
+    if (message === "") 
+        { alert("메시지를 입력해주세요.");
+        return;
+    }
+
+    const userMessageElement = document.createElement("div");
+    userMessageElement.classList.add("message", "sent");
+
+    const textElement = document.createElement("div");
+    textElement.classList.add("text");
+    textElement.innerText = message;
+
+    userMessageElement.appendChild(textElement);
+    chatContainer.appendChild(userMessageElement);
+    userMessageElement.scrollIntoView({ behavior: "smooth" });
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    userInput.value = "";
+    userInput.style.height = "40px";
+
+    saveChatToLocalStorage();
+
+    try {
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                text: message
+            }),
+        });
+        const data = await response.json();
+        simulateTyping(data.answer || "대화 실패");
+
+    }catch (err) {
+            console.error(err);
+            simulateTyping("API 요청 오류" + err.message);
+    }
+
+});
 
 // 초기 로드
 loadChatFromLocalStorage();

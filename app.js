@@ -5,6 +5,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const { translateGpt } = require('./src/scripts/translate.js');
+const { chatGpt } = require('./src/scripts/chatbot.js');
 
 // 정적 파일 제공 (public 폴더)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,6 +34,26 @@ app.post('/translate', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: '번역 중 오류가 발생했습니다.' });
+  }
+});
+
+// 채팅 요청
+app.post('/chat', async (req, res) => {
+  const { text } = req.body;
+
+  if (!text) {
+    return res.status(400).json({ error: '텍스트가 존재하지 않습니다.' })
+  }
+  
+  try {
+    const answer = await chatGpt(text);
+    res.json({ 
+      original: text,
+      answer: answer
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '채팅 중 오류가 발생했습니다.' });
   }
 });
 
