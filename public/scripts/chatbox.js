@@ -56,6 +56,11 @@ function simulateTyping(fullText, speed = 20, callback) {
     botMessageElement.appendChild(textElement);
     chatContainer.appendChild(botMessageElement);
 
+    const translateBtn = document.createElement("button");
+    translateBtn.classList.add("translate-btn");
+    translateBtn.innerText = "T";
+    botMessageElement.appendChild(translateBtn);
+
     let index = 0;
 
     function typeNextChar() {
@@ -73,11 +78,10 @@ function simulateTyping(fullText, speed = 20, callback) {
 }
 
 // 한일/일한 번역
-translateKorToJpBtn.addEventListener("click", () => translate("kr-to-jp"));
-translateJpToKorBtn.addEventListener("click", () => translate("jp-to-kr"));
+translateKorToJpBtn.addEventListener("click", () => translate(userInput.value.trim(), "kr-to-jp"));
+translateJpToKorBtn.addEventListener("click", () => translate(userInput.value.trim(), "jp-to-kr"));
 
-async function translate(direction) {
-    const message = userInput.value.trim();
+async function translate(message, direction) {
     if (message === "") {
         alert("메시지를 입력해주세요.");
         return;
@@ -90,7 +94,12 @@ async function translate(direction) {
     textElement.classList.add("text");
     textElement.innerText = message;
 
+    const translateBtn = document.createElement("button");
+    translateBtn.classList.add("translate-btn");
+    translateBtn.innerText = "T";
+
     userMessageElement.appendChild(textElement);
+    userMessageElement.appendChild(translateBtn);
     chatContainer.appendChild(userMessageElement);
     userMessageElement.scrollIntoView({ behavior: "smooth" });
     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -120,6 +129,7 @@ async function translate(direction) {
     }
 }
 
+//대화 기능
 sendBtn.addEventListener("click", async() => {
     const message = userInput.value.trim();
     if (message === "") 
@@ -134,7 +144,12 @@ sendBtn.addEventListener("click", async() => {
     textElement.classList.add("text");
     textElement.innerText = message;
 
+    const translateBtn = document.createElement("button");
+    translateBtn.classList.add("translate-btn");
+    translateBtn.innerText = "T";
+
     userMessageElement.appendChild(textElement);
+    userMessageElement.appendChild(translateBtn);
     chatContainer.appendChild(userMessageElement);
     userMessageElement.scrollIntoView({ behavior: "smooth" });
     chatContainer.scrollTop = chatContainer.scrollHeight;

@@ -172,6 +172,9 @@ body {
 }
 
 .message {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
     border-radius: 15px;
     word-wrap: break-word;
@@ -180,6 +183,25 @@ body {
     box-sizing: border-box;
     line-height: 1.5;
     padding: 10px;
+}
+
+.text {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.translate-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background 0.3s ease;
+}
+
+.translate-btn:hover {
+  background: #ddd;
 }
 
 .sent {
@@ -215,10 +237,6 @@ body {
 .chat-button:active {
     transform: scale(0.95);
     transition: transform 0.1s ease;
-}
-
-.copy:active {
-    background-color: #8bbfe9;
 }
 
 /* 푸터 */
