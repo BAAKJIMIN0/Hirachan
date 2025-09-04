@@ -5,3 +5,4 @@ const translateKorToJpBtn = document.getElementById("translate-kor-to-jp");
 const sendBtn = document.getElementById('send-btn');
 const userInput = document.getElementById("user-input");
 const autoChangeBtn = document.getElementById("autoChange-btn");
+const translationPreviewContainer = document.getElementById("translation-preview-container");
