@@ -22,7 +22,6 @@ function createMessageElement(text, type = "sent") {
 // 메시지 추가 및 스크롤 처리
 function appendMessage(messageElement) {
     chatContainer.appendChild(messageElement);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
     saveChatToLocalStorage();
 }
 
@@ -74,7 +73,6 @@ function simulateTyping(fullText, speed = 20, callback) {
         if (index < fullText.length) {
             textElement.innerText += fullText.charAt(index);
             index++;
-            chatContainer.scrollTop = chatContainer.scrollHeight;
             setTimeout(typeNextChar, speed);
         } else {
             saveChatToLocalStorage();
@@ -84,58 +82,20 @@ function simulateTyping(fullText, speed = 20, callback) {
     typeNextChar();
 }
 
-// 번역 버튼 생성
-function createTranslateBtn() {
-    const btn = document.createElement("button");
-    btn.classList.add("translate-btn");
-    btn.innerText = "T";
-
-    btn.addEventListener("click", async () => {
-        const messageElement = btn.closest(".message");
-        let translationBox = messageElement.querySelector(".translationBox");
-
-        if (!translationBox) {
-            translationBox = document.createElement("div");
-            translationBox.classList.add("translationBox");
-            translationBox.innerText = "번역 중입니다...";
-            messageElement.appendChild(translationBox);
-
-            try {
-                const messageText = messageElement.querySelector(".text").innerText;
-                const response = await fetch("/translate", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ text: messageText, direction: "jp-to-kr" })
-                });
-                const data = await response.json();
-
-                const translatedText = data.translation || "번역 실패";
-                translationBox.innerHTML = `
-                    <div class="original">원문: ${messageText}</div>
-                    <div class="meaning">해석: ${translatedText}</div>
-                    <div class="kanji">핵심 한자: 한자</div>
-                `;
-            } catch (err) {
-                console.error(err);
-                translationBox.innerText = "API 요청 오류: " + err.message;
-            }
-        } else {
-            translationBox.style.display =
-                translationBox.style.display === "none" ? "block" : "none";
-        }
-    });
-    return btn;
-}
-
-function createTranslationBox(original, meaning, kanji) {
-    const translationBox = document.createElement("div");
-    translationBox.classList.add("translationBox");
-    translationBox.innerHTML = `
-        <div class="original">원문: ${original}</div>
-        <div class="meaning">해석: ${meaning}</div>
-        <div class="kanji">핵심 한자: ${kanji}</div>
-    `;
-    return translationBox;
+// 번역 API 호출 함수
+async function fetchTranslation(text, direction) {
+    try {
+        const response = await fetch("/translate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text, direction })
+        });
+        const data = await response.json();
+        return data.translation || "번역 실패";
+    } catch (err) {
+        console.error(err);
+        return "API 요청 오류: " + err.message;
+    }
 }
 
 // 메시지 전송
@@ -148,6 +108,7 @@ sendBtn.addEventListener("click", async () => {
 
     userInput.value = "";
     userInput.style.height = "40px";
+    translationPreviewContainer.style.display = "none";
 
     try {
         const response = await fetch("/chat", {
@@ -163,37 +124,63 @@ sendBtn.addEventListener("click", async () => {
     }
 });
 
+// 번역 버튼 생성
+function createTranslateBtn() {
+    const btn = document.createElement("button");
+    btn.classList.add("translate-btn");
+    btn.innerText = "T";
+
+    btn.addEventListener("click", async () => {
+        const messageElement = btn.closest(".message");
+        let translationBox = messageElement.querySelector(".translationBox");
+
+        if (!translationBox) {
+            const messageText = messageElement.querySelector(".text").innerText;
+            const translatedText = await fetchTranslation(messageText, "jp-to-kr");
+
+            translationBox = document.createElement("div");
+            translationBox.classList.add("translationBox");
+            translationBox.innerText = ``;
+
+            messageElement.appendChild(translationBox);
+            translationBox.innerHTML = `
+                <div class="original">원문: ${messageText}</div>
+                <div class="meaning">해석: ${translatedText}</div>
+                <div class="kanji">핵심 한자: 한자</div>
+            `;
+
+        } else {
+            translationBox.style.display = translationBox.style.display === "none" ? "" : "none";
+        }
+    });
+
+    return btn;
+}
+
 async function translate(message, direction) {
     if (!message) return alert("메시지를 입력해주세요.");
-
     translationPreviewContainer.innerHTML = "";
-
-    const box = document.createElement("div");
-    box.classList.add("translation-preview");
-    box.innerText = `
-        번역 중입니다...
-
-    `;
-
-    translationPreviewContainer.appendChild(box);
-
+    let box;
+    
     try {
-        const response = await fetch("/translate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: message, direction }),
-        });
-        const data = await response.json();
-        const translatedText = data.translation || "번역 실패";
-
+        const translatedText = await fetchTranslation(message, direction);
+        box = document.createElement("div");
+        box.classList.add("translation-preview");
+        translationPreviewContainer.appendChild(box);
         box.innerHTML = `
             <div class="original">원문: ${message}</div>
             <div class="meaning">해석: ${translatedText}</div>
             <div class="kanji">핵심 한자: 한자</div>
         `;
+        translationPreviewContainer.style.display = "block";
+        if (direction === "kr-to-jp") {
+            userInput.value = translatedText;
+        }
+
     } catch (err) {
         console.error(err);
         box.innerText = "API 요청 오류: " + err.message;
+        translationPreviewContainer.style.display = "block";
     }
 }
 

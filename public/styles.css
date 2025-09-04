@@ -87,7 +87,6 @@ body {
     flex-direction: column;
     padding: 0px 2px 20px 16px;
     overflow-y: auto;
-    flex-direction: column;
     gap: 10px;
     overflow-wrap: break-word;
     line-height: 1.6;
@@ -224,13 +223,17 @@ body {
 }
 
 .translationBox {
+    display: flex;
+    flex-direction: column;
     margin-top: 6px;
+    gap: 6px;
     border-top: 1px solid #ccc;
     font-size: 13px;
 }
 
 .translationBox .original {
     font-weight: bold;
+    margin-top: 6px;
 }
 
 .translationBox .meaning {
