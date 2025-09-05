@@ -189,7 +189,7 @@ body {
     width: 100%;
     border-radius: 15px;
     word-wrap: break-word;
-    font-size: 14px;
+    font-size: 20px;
     white-space: pre-wrap;
     box-sizing: border-box;
     line-height: 1.5;
@@ -228,7 +228,7 @@ body {
     margin-top: 6px;
     gap: 6px;
     border-top: 1px solid #ccc;
-    font-size: 13px;
+    font-size: 18px;
 }
 
 .translationBox .original {
