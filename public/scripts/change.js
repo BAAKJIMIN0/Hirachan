@@ -112,7 +112,10 @@ userInput.addEventListener("compositionend", (e) => {
   const inputText = userInput.value;
   if (!inputText) return;
 
-  const lastChar = inputText[inputText.length - 1];
+  const cursor = userInput.selectionStart;
+  if (cursor === 0) return;
+
+  const lastChar = inputText[cursor - 1];
   let converted = "";
 
   if (
@@ -130,7 +133,8 @@ userInput.addEventListener("compositionend", (e) => {
     converted = mainJP + subJP;
   }
 
-  userInput.value = inputText.slice(0, -1) + converted;
+  userInput.value = inputText.slice(0, cursor - 1) + converted + inputText.slice(cursor);
+  userInput.setSelectionRange(cursor + converted.length - 1, cursor + converted.length - 1);
 });
 
 document.getElementById("toH-btn").addEventListener("click", () => {
@@ -156,7 +160,7 @@ document.getElementById("toH-btn").addEventListener("click", () => {
       converted += mainHMap[ch] || ch;
     }
   }
-  userInput.setRangeText(converted, start, end, "end");
+  userInput.setRangeText(converted, start, end, "preserve");
 });
 
 document.getElementById("toK-btn").addEventListener("click", () => {
@@ -182,5 +186,5 @@ document.getElementById("toK-btn").addEventListener("click", () => {
       converted += mainKMap[ch] || ch;
     }
   }
-  userInput.setRangeText(converted, start, end, "end");
+  userInput.setRangeText(converted, start, end, "preserve");
 });
