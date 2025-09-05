@@ -100,8 +100,14 @@ async function fetchTranslation(text, direction) {
 
 // 메시지 전송
 sendBtn.addEventListener("click", async () => {
+    if (userInput.dataset.sending === "true") return;
+    userInput.dataset.sending = "true";
+
     const message = userInput.value.trim();
-    if (!message) return alert("메시지를 입력해주세요.");
+    if (!message) {
+        userInput.dataset.sending = "false";
+        return alert("메시지를 입력해주세요.");
+    }
 
     const userMessage = createMessageElement(message, "sent");
     appendMessage(userMessage);
@@ -121,6 +127,8 @@ sendBtn.addEventListener("click", async () => {
     } catch (err) {
         console.error(err);
         simulateTyping("API 요청 오류: " + err.message);
+    } finally {
+        userInput.dataset.sending = "false";
     }
 });
 
@@ -132,23 +140,29 @@ function createTranslateBtn() {
 
     btn.addEventListener("click", async () => {
         const messageElement = btn.closest(".message");
+        if (messageElement.dataset.translating === "true") return;
         let translationBox = messageElement.querySelector(".translationBox");
 
         if (!translationBox) {
+            messageElement.dataset.translating = "true";
             const messageText = messageElement.querySelector(".text").innerText;
-            const translatedText = await fetchTranslation(messageText, "jp-to-kr");
+            
+            try {
+                const translatedText = await fetchTranslation(messageText, "jp-to-kr");
 
-            translationBox = document.createElement("div");
-            translationBox.classList.add("translationBox");
-            translationBox.innerText = ``;
-
-            messageElement.appendChild(translationBox);
-            translationBox.innerHTML = `
+                translationBox = document.createElement("div");
+                translationBox.classList.add("translationBox");
+                translationBox.innerHTML = `
                 <div class="original">원문: ${messageText}</div>
                 <div class="meaning">해석: ${translatedText}</div>
                 <div class="kanji">핵심 한자: 한자</div>
             `;
-
+            messageElement.appendChild(translationBox);
+            } catch(err) {
+                console.error(err);
+            } finally {
+                messageElement.dataset.translating = "false";
+            }
         } else {
             translationBox.style.display = translationBox.style.display === "none" ? "" : "none";
         }
@@ -181,12 +195,25 @@ async function translate(message, direction) {
         console.error(err);
         box.innerText = "API 요청 오류: " + err.message;
         translationPreviewContainer.style.display = "block";
+    } finally {
+        userInput.dataset.translating = "false"
     }
 }
 
 // 번역 버튼 이벤트
-translateKorToJpBtn.addEventListener("click", () => translate(userInput.value.trim(), "kr-to-jp"));
-translateJpToKorBtn.addEventListener("click", () => translate(userInput.value.trim(), "jp-to-kr"));
+translateKorToJpBtn.addEventListener("click", () => {
+    if (userInput.dataset.translating === "true") return;
+    userInput.dataset.translating = "true";
+    translate(userInput.value.trim(), "kr-to-jp")
+        .finally(() => { userInput.dataset.translating = "false"; });
+});
+
+translateJpToKorBtn.addEventListener("click", () => {
+    if (userInput.dataset.translating === "true") return;
+    userInput.dataset.translating = "true";
+    translate(userInput.value.trim(), "jp-to-kr")
+        .finally(() => { userInput.dataset.translating = "false"; });
+});
 
 // 초기 로드
 loadChatFromLocalStorage();
