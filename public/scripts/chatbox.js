@@ -111,16 +111,23 @@ sendBtn.addEventListener("click", async () => {
 
     const userMessage = createMessageElement(message, "sent");
     appendMessage(userMessage);
-
     userInput.value = "";
     userInput.style.height = "40px";
     translationPreviewContainer.style.display = "none";
 
     try {
+        const chatHistory = JSON.parse(localStorage.getItem("chatData") || "[]");
+        const recentHistory = chatHistory.slice(-30);
+        const payload = {
+        recentHistory: recentHistory,
+        userText: message,
+        };
+        console.log("서버로 보낼 JSON:", payload);
+
         const response = await fetch("/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: message }),
+            body: JSON.stringify(payload),
         });
         const data = await response.json();
         simulateTyping(data.answer || "대화 실패");
