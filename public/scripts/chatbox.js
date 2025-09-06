@@ -155,7 +155,6 @@ function createTranslateBtn() {
                 translationBox.innerHTML = `
                 <div class="original">원문: ${messageText}</div>
                 <div class="meaning">해석: ${translatedText}</div>
-                <div class="kanji">핵심 한자: 한자</div>
             `;
             messageElement.appendChild(translationBox);
             } catch(err) {
@@ -184,7 +183,6 @@ async function translate(message, direction) {
         box.innerHTML = `
             <div class="original">원문: ${message}</div>
             <div class="meaning">해석: ${translatedText}</div>
-            <div class="kanji">핵심 한자: 한자</div>
         `;
         translationPreviewContainer.style.display = "block";
         if (direction === "kr-to-jp") {
