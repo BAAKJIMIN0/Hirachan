@@ -39,16 +39,21 @@ app.post('/translate', async (req, res) => {
 
 // 채팅 요청
 app.post('/chat', async (req, res) => {
-  const { text } = req.body;
+  const { recentHistory, userText } = req.body;
 
-  if (!text) {
+  if (!userText) {
     return res.status(400).json({ error: '텍스트가 존재하지 않습니다.' })
   }
+
+  const messages = (recentHistory || []).map(msg => ({
+    role: msg.className === "sent" ? "user" : "assistant",
+    content: msg.text
+  }));
   
   try {
-    const answer = await chatGpt(text);
+    const answer = await chatGpt(userText, messages);
     res.json({ 
-      original: text,
+      original: userText,
       answer: answer
     });
   } catch (err) {
