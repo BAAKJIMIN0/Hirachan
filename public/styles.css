@@ -1,11 +1,11 @@
 :root {
-    --color-theme: #196de3;
+    --color-theme: #c23e3e;
     --color-background: #f0f4f8;
     --color-white: #ffffff;
     --color-black: #333333;
     --color-border: #ccc;
     --color-text: #000000;
-    --color-button-hover: #145bb5;
+    --color-button-hover: #8d2121;
 }
 
 body {
@@ -228,7 +228,7 @@ body {
     margin-top: 6px;
     gap: 6px;
     border-top: 1px solid #ccc;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .translationBox .original {
@@ -240,8 +240,19 @@ body {
     color: #196de3;
 }
 
-.translationBox .kanji {
-    color: #e33c3c;
+.translationBox .furigana {
+    margin-top: 6px;
+    font-size: 20px;
+}
+
+.translationBox .furigana ruby {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.translationBox .furigana ruby rt {
+  font-size: 16px;
+  color: #555;
 }
 
 .sent {

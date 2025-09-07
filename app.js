@@ -1,4 +1,4 @@
-// npm install express openai dotenv
+// npm install express openai dotenv kuroshiro kuroshiro-analyzer-kuromoji
 require('dotenv').config();
 
 const express = require('express');
@@ -6,10 +6,15 @@ const path = require('path');
 const app = express();
 const { translateGpt } = require('./src/scripts/translate.js');
 const { chatGpt } = require('./src/scripts/chatbot.js');
+const { initFurigana, toFurigana } = require('./src/scripts/furigana.js');
 
 // 정적 파일 제공 (public 폴더)
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+
+initFurigana()
+  .then(() => console.log("Kuroshiro initialized!"))
+  .catch(err => console.error("Kuroshiro 초기화 실패:", err));
 
 // API 예시
 app.get('/', (req, res) => {
@@ -25,11 +30,13 @@ app.post('/translate', async (req, res) => {
   }
   
   try {
-    const translation = await translateGpt(text, direction);
+    const translatedText = await translateGpt(text, direction);
+    const furiganaHtml = await toFurigana(text);
     res.json({ 
       direction: direction,
       original: text,
-      translation: translation
+      translatedText: translatedText,
+      furiganaHtml: furiganaHtml
     });
   } catch (err) {
     console.error(err);

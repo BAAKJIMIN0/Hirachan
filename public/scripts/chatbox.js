@@ -91,7 +91,10 @@ async function fetchTranslation(text, direction) {
             body: JSON.stringify({ text, direction })
         });
         const data = await response.json();
-        return data.translation || "번역 실패";
+        return {
+        translatedText: data.translatedText || "번역 실패",
+        furiganaHtml: data.furiganaHtml || "분석 실패"
+        };
     } catch (err) {
         console.error(err);
         return "API 요청 오류: " + err.message;
@@ -155,12 +158,12 @@ function createTranslateBtn() {
             const messageText = messageElement.querySelector(".text").innerText;
             
             try {
-                const translatedText = await fetchTranslation(messageText, "jp-to-kr");
+                const { translatedText, furiganaHtml } = await fetchTranslation(messageText, "jp-to-kr");
 
                 translationBox = document.createElement("div");
                 translationBox.classList.add("translationBox");
                 translationBox.innerHTML = `
-                <div class="original">원문: ${messageText}</div>
+                <div class="furigana">원문: ${furiganaHtml}</div>
                 <div class="meaning">해석: ${translatedText}</div>
             `;
             messageElement.appendChild(translationBox);
@@ -183,13 +186,13 @@ async function translate(message, direction) {
     let box;
     
     try {
-        const translatedText = await fetchTranslation(message, direction);
+        const { translatedText, furiganaHtml } = await fetchTranslation(message, direction);
         box = document.createElement("div");
         box.classList.add("translation-preview");
         translationPreviewContainer.appendChild(box);
         box.innerHTML = `
-            <div class="original">원문: ${message}</div>
-            <div class="meaning">해석: ${translatedText}</div>
+            <div class="furigana">원문: ${furiganaHtml}</div>
+            <div class="meaning">해석: ${translatedText}</div> 
         `;
         translationPreviewContainer.style.display = "block";
         if (direction === "kr-to-jp") {
