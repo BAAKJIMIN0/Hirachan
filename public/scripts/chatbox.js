@@ -120,7 +120,7 @@ sendBtn.addEventListener("click", async () => {
 
     try {
         const chatHistory = JSON.parse(localStorage.getItem("chatData") || "[]");
-        const recentHistory = chatHistory.slice(-30);
+        const recentHistory = chatHistory.slice(-20);
         const payload = {
         recentHistory: recentHistory,
         userText: message,
@@ -190,10 +190,18 @@ async function translate(message, direction) {
         box = document.createElement("div");
         box.classList.add("translation-preview");
         translationPreviewContainer.appendChild(box);
-        box.innerHTML = `
+        if (direction === "kr-to-jp") {
+            box.innerHTML = `
             <div class="furigana">원문: ${furiganaHtml}</div>
-            <div class="meaning">해석: ${translatedText}</div> 
+            <div class="meaning">해석: ${message}</div>
         `;
+        }
+        else if (direction === "jp-to-kr") {
+            box.innerHTML = `
+                <div class="furigana">원문: ${furiganaHtml}</div>
+                <div class="meaning">해석: ${translatedText}</div>
+            `;
+        }
         translationPreviewContainer.style.display = "block";
         if (direction === "kr-to-jp") {
             userInput.value = translatedText;

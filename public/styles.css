@@ -105,6 +105,26 @@ body {
     border-top: 1px solid #ccc;
     padding: 10px;
     box-sizing: border-box;
+    font-size: 20px;
+}
+
+.translation-preview .meaning {
+    color: #196de3;
+}
+
+.translation-preview .furigana {
+    margin-top: 6px;
+    font-size: 20px;
+}
+
+.translation-preview .furigana ruby {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.translation-preview .furigana ruby rt {
+  font-size: 16px;
+  color: #555;
 }
 
 #input-container {
