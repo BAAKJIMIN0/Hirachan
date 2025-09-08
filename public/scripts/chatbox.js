@@ -217,14 +217,14 @@ async function translate(message, direction) {
 }
 
 // 번역 버튼 이벤트
-translateKorToJpBtn.addEventListener("click", () => {
+translateKrToJpBtn.addEventListener("click", () => {
     if (userInput.dataset.translating === "true") return;
     userInput.dataset.translating = "true";
     translate(userInput.value.trim(), "kr-to-jp")
         .finally(() => { userInput.dataset.translating = "false"; });
 });
 
-translateJpToKorBtn.addEventListener("click", () => {
+translateJpToKrBtn.addEventListener("click", () => {
     if (userInput.dataset.translating === "true") return;
     userInput.dataset.translating = "true";
     translate(userInput.value.trim(), "jp-to-kr")

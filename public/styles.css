@@ -26,7 +26,7 @@ body {
     color: var(--color-white);
     position: fixed;
     padding-left: 25px;
-    padding-right: 2cqmin;
+    padding-right: 25px;
     top: 0;
     left: 0;
     z-index: 1000;
@@ -67,7 +67,6 @@ body {
 
 /* 채팅 영역 */
 .chat-frame {
-    flex: 4.5;
     width: 100%;
     height: 100%;
     background-color: var(--color-white);
@@ -75,10 +74,8 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     padding: 16px 0px;
     box-sizing: border-box;
-    overflow-y: auto;
 }
 
 #chat-container {
@@ -92,6 +89,70 @@ body {
     line-height: 1.6;
     white-space: pre-wrap;
     scrollbar-gutter: stable;
+}
+
+
+.message {
+    width: 100%;
+    border-radius: 15px;
+    word-wrap: break-word;
+    font-size: 20px;
+    white-space: pre-wrap;
+    box-sizing: border-box;
+    line-height: 1.5;
+    padding: 10px;
+}
+
+.sent {
+    align-self: flex-end;
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+.received {
+    align-self: flex-start;
+    color: var(--color-text);
+    padding: 0 10px;
+}
+
+.originalMessage {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.text {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.translate-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background 0.3s ease;
+}
+
+.translate-btn:hover {
+  background: #ddd;
+}
+
+.translationBox {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 6px;
+    border-top: 1px solid #ccc;
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.translationBox .meaning {
+    color: #196de3;
 }
 
 #translation-preview-container {
@@ -108,23 +169,24 @@ body {
     font-size: 20px;
 }
 
-.translation-preview .meaning {
-    color: #196de3;
-}
-
 .translation-preview .furigana {
-    margin-top: 6px;
     font-size: 20px;
 }
 
-.translation-preview .furigana ruby {
-  font-size: 20px;
-  font-weight: bold;
+.translation-preview .furigana ruby,
+.translationBox .furigana ruby {
+    font-size: 20px;
+    font-weight: bold;
 }
 
-.translation-preview .furigana ruby rt {
-  font-size: 16px;
-  color: #555;
+.translation-preview .furigana ruby rt,
+.translationBox .furigana ruby rt {
+    font-size: 16px;
+    color: #555;
+}
+
+.translation-preview .meaning {
+    color: #196de3;
 }
 
 #input-container {
@@ -187,125 +249,22 @@ body {
     background-color: var(--color-border);
 }
 
-#translate-kor-to-jp, #translate-jp-to-kor, #send-btn {
+#translate-kr-to-jp, #translate-jp-to-kr, #send-btn {
     background-color: var(--color-theme);
     color: var(--color-white);
 }
 
-#translate-kor-to-jp:hover, #translate-jp-to-kor:hover, #send-btn:hover {
+#translate-kr-to-jp:hover, #translate-jp-to-kr:hover, #send-btn:hover {
     background-color: var(--color-button-hover);
 }
 
-#translate-kor-to-jp {
+#translate-kr-to-jp {
     margin-left: auto;
 }
 
 #send-btn {
     border: none;
     border-bottom-right-radius: 15px;
-}
-
-.message {
-    width: 100%;
-    border-radius: 15px;
-    word-wrap: break-word;
-    font-size: 20px;
-    white-space: pre-wrap;
-    box-sizing: border-box;
-    line-height: 1.5;
-    padding: 10px;
-}
-
-.originalMessage {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-.text {
-    flex: 1;
-    margin-right: 10px;
-}
-
-.translate-btn {
-  border: none;
-  border-radius: 8px;
-  padding: 6px 10px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #333;
-  transition: background 0.3s ease;
-}
-
-.translate-btn:hover {
-  background: #ddd;
-}
-
-.translationBox {
-    display: flex;
-    flex-direction: column;
-    margin-top: 6px;
-    gap: 6px;
-    border-top: 1px solid #ccc;
-    font-size: 20px;
-}
-
-.translationBox .original {
-    font-weight: bold;
-    margin-top: 6px;
-}
-
-.translationBox .meaning {
-    color: #196de3;
-}
-
-.translationBox .furigana {
-    margin-top: 6px;
-    font-size: 20px;
-}
-
-.translationBox .furigana ruby {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.translationBox .furigana ruby rt {
-  font-size: 16px;
-  color: #555;
-}
-
-.sent {
-    align-self: flex-end;
-    background-color: var(--color-background);
-    color: var(--color-text);
-}
-
-.received {
-    align-self: flex-start;
-    color: var(--color-text);
-    padding: 0 10px;
-}
-
-.chat-button-container {
-    margin-top: 10px;
-    display: flex;
-    justify-content: flex-start;
-    gap: 5px;
-}
-
-.chat-button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: var(--color-white);
-    border: 1px solid var(--color-border);
-}
-
-.chat-button:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
 }
 
 /* 푸터 */
