@@ -1,20 +1,14 @@
-const OpenAI = require('openai');
+const openai = require('./callGpt.js');
 
-const openaiApiKey = process.env.OPENAI_API_KEY;
-const openai = new OpenAI({
-  apiKey: openaiApiKey,
-});
-
-const promptForKor = "한국어로 번역한 문장만 써주세요.";
-const promptForJp = "일본어로 번역한 문장만 써주세요.";
+const prompts = {
+  "kr-to-jp": "일본어로 번역한 문장만 써주세요.",
+  "jp-to-kr": "한국어로 번역한 문장만 써주세요."
+};
 
 async function translateGpt(text, direction) {
-    let systemPrompt;
-    if (direction === "kr-to-jp") {
-        systemPrompt = promptForJp;
-    }
-    else if (direction === "jp-to-kr") {
-        systemPrompt = promptForKor;
+    const systemPrompt = prompts[direction];
+    if (!systemPrompt) {
+        throw new Error("오류 : 잘못된 번역 방향 설정");
     }
     const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",

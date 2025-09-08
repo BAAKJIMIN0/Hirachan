@@ -31,13 +31,8 @@ app.post('/translate', async (req, res) => {
   
   try {
     const translatedText = await translateGpt(text, direction);
-    let furiganaHtml = "";
-    if (direction === "kr-to-jp") {
-      furiganaHtml = await toFurigana(translatedText);
-    }
-    else if (direction === "jp-to-kr") {
-      furiganaHtml = await toFurigana(text);
-    }
+    const targetText = direction === "kr-to-jp" ? translatedText : text;
+    const furiganaHtml = await toFurigana(targetText);
     
     res.json({ 
       direction: direction,

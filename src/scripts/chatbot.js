@@ -1,9 +1,4 @@
-const OpenAI = require('openai');
-
-const openaiApiKey = process.env.OPENAI_API_KEY;
-const openai = new OpenAI({
-  apiKey: openaiApiKey,
-});
+const openai = require('./callGpt.js');
 
 const promptForChat = `너의 이름은 히라쨩(ひらちゃん)이야.
 친절한 일본어 학습 도우미 챗봇이야. 사용자와 일본 여고생들이 쓰는 귀여운 말투로 대화해줘.
