@@ -11,6 +11,19 @@ const pool = mysql.createPool({
   charset: 'utf8mb4'
 });
 
+// 메시지 가져오기
+async function getMessages(userId) {
+  const [rows] = await pool.execute(
+    `SELECT original AS text, state AS class_name, created_at
+     FROM messages
+     WHERE user_id = ?
+     ORDER BY created_at ASC
+     LIMIT 20`,
+    [userId]
+  );
+  return rows;
+}
+
 // 메시지 저장 함수
 async function saveMessage(userId, original, translated = null, furigana = null, state) {
   const sql = `
@@ -38,4 +51,4 @@ async function saveFurigana(messageId, furignanaHtml) {
   await pool.execute(sql, [furignanaHtml, messageId]);
 }
 
-module.exports = { pool, saveMessage, saveTranslation, saveFurigana };
+module.exports = { pool, getMessages, saveMessage, saveTranslation, saveFurigana };

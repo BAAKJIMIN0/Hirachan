@@ -22,44 +22,23 @@ function createMessageElement(text, type = "sent") {
 // 메시지 추가 및 스크롤 처리
 function appendMessage(messageElement) {
     chatContainer.appendChild(messageElement);
-    saveChatToLocalStorage();
+    //saveChatToLocalStorage();
 }
 
-// 로컬스토리지 저장
-function saveChatToLocalStorage() {
-    const chatData = Array.from(chatContainer.children).map((message) => {
-        const textElement = message.querySelector(".originalMessage .text");
-        return {
-            text: textElement ? textElement.innerText : "",
-            className: message.classList.contains("sent") ? "sent" : "received"
-        };
-    });
-    localStorage.setItem("chatData", JSON.stringify(chatData));
-}
-
-// 로컬스토리지 불러오기
-function loadChatFromLocalStorage() {
+// 데이터베이스 불러오기
+async function loadChatFromDB(userId) {
     try {
-        const savedChatData = JSON.parse(localStorage.getItem("chatData"));
-        if (savedChatData) {
-            savedChatData.forEach((msg) => {
-                const messageElement = createMessageElement(msg.text, msg.className);
-                appendMessage(messageElement);
-            });
-        }
-    } catch (e) {
-        console.error("로컬스토리지 데이터 오류:", e);
-        localStorage.removeItem("chatData");
+        const res = await fetch(`http://localhost:3000/messages/${userId}`);
+        const data = await res.json();
+
+        data.forEach(msg => {
+            const messageElement = createMessageElement(msg.text, msg.class_name);
+            appendMessage(messageElement);
+        });
+    } catch (err) {
+        console.error("메시지 불러오기 실패:", err);
     }
 }
-
-// 로컬스토리지 초기화
-logo.addEventListener("click", (event) => {
-    event.preventDefault();
-    chatContainer.innerHTML = "";
-    localStorage.removeItem("chatData");
-    location.reload();
-});
 
 // 타이핑 애니메이션
 function simulateTyping(fullText, speed = 20, callback) {
@@ -75,7 +54,7 @@ function simulateTyping(fullText, speed = 20, callback) {
             index++;
             setTimeout(typeNextChar, speed);
         } else {
-            saveChatToLocalStorage();
+            //saveChatToLocalStorage();
             if (callback) callback();
         }
     }
@@ -119,11 +98,9 @@ sendBtn.addEventListener("click", async () => {
     translationPreviewContainer.style.display = "none";
 
     try {
-        const chatHistory = JSON.parse(localStorage.getItem("chatData") || "[]");
-        const recentHistory = chatHistory.slice(-20);
         const payload = {
-        recentHistory: recentHistory,
-        userText: message,
+            userId: 1,
+            userText: message,
         };
         console.log("서버로 보낼 JSON:", payload);
 
@@ -232,4 +209,48 @@ translateJpToKrBtn.addEventListener("click", () => {
 });
 
 // 초기 로드
-loadChatFromLocalStorage();
+loadChatFromDB(1);
+
+
+
+
+
+
+
+/* 로컬스토리지 관련
+// 로컬스토리지 저장
+function saveChatToLocalStorage() {
+    const chatData = Array.from(chatContainer.children).map((message) => {
+        const textElement = message.querySelector(".originalMessage .text");
+        return {
+            text: textElement ? textElement.innerText : "",
+            className: message.classList.contains("sent") ? "sent" : "received"
+        };
+    });
+    localStorage.setItem("chatData", JSON.stringify(chatData));
+}
+
+// 로컬스토리지 불러오기
+function loadChatFromLocalStorage() {
+    try {
+        const savedChatData = JSON.parse(localStorage.getItem("chatData"));
+        if (savedChatData) {
+            savedChatData.forEach((msg) => {
+                const messageElement = createMessageElement(msg.text, msg.className);
+                appendMessage(messageElement);
+            });
+        }
+    } catch (e) {
+        console.error("로컬스토리지 데이터 오류:", e);
+        localStorage.removeItem("chatData");
+    }
+}
+
+// 로컬스토리지 초기화
+logo.addEventListener("click", (event) => {
+    event.preventDefault();
+    chatContainer.innerHTML = "";
+    localStorage.removeItem("chatData");
+    location.reload();
+});
+*/

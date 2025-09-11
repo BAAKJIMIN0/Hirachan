@@ -1,4 +1,4 @@
-// npm install express openai dotenv kuroshiro kuroshiro-analyzer-kuromoji
+// npm install express openai dotenv mysql12 kuroshiro kuroshiro-analyzer-kuromoji
 require('dotenv').config();
 
 const express = require('express');
@@ -7,6 +7,7 @@ const app = express();
 const { translateGpt } = require('./src/scripts/translate.js');
 const { chatGpt } = require('./src/scripts/chatbot.js');
 const { initFurigana, toFurigana } = require('./src/scripts/furigana.js');
+const { getMessages } = require('./src/scripts/db.js');
 
 // 정적 파일 제공 (public 폴더)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -19,6 +20,19 @@ initFurigana()
 // API 예시
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// 대화 불러오기
+app.get('/messages/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const rows = await getMessages(userId);
+    res.json(rows);
+  } catch (err) {
+    console.error("메시지 불러오기 오류:", err);
+    res.status(500).json({ error: '메시지 조회 중 오류 발생' });
+  }
 });
 
 // 번역 요청
@@ -48,27 +62,24 @@ app.post('/translate', async (req, res) => {
 
 // 채팅 요청
 app.post('/chat', async (req, res) => {
-  const { recentHistory, userText } = req.body;
+    const { userText, userId } = req.body;
 
-  if (!userText) {
-    return res.status(400).json({ error: '텍스트가 존재하지 않습니다.' })
-  }
+    if (!userText) return res.status(400).json({ error: '텍스트가 존재하지 않습니다.' });
 
-  const messages = (recentHistory || []).map(msg => ({
-    role: msg.className === "sent" ? "user" : "assistant",
-    content: msg.text
-  }));
-  
-  try {
-    const answer = await chatGpt(userText, messages);
-    res.json({ 
-      original: userText,
-      answer: answer
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: '채팅 중 오류가 발생했습니다.' });
-  }
+    try {
+        const recentMessages = await getMessages(userId);
+
+        const messages = recentMessages.map(msg => ({
+            role: msg.class_name === "sent" ? "user" : "assistant",
+            content: msg.text
+        }));
+
+        const answer = await chatGpt(userText, messages);
+        res.json({ original: userText, answer });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: '채팅 중 오류가 발생했습니다.' });
+    }
 });
 
 // 서버 시작
