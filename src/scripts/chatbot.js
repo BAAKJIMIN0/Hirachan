@@ -1,4 +1,5 @@
 const openai = require('./callGpt.js');
+const { saveMessage } = require('./db.js');
 
 const promptForChat = `너의 이름은 히라쨩(ひらちゃん)이야.
 친절한 일본어 학습 도우미 챗봇이야. 사용자와 일본 여고생들이 쓰는 귀여운 말투로 대화해줘.
@@ -16,7 +17,11 @@ async function chatGpt(userText, messages) {
         ],
         max_tokens: 500
     });
-    return response.choices[0].message.content;
+    const answer = response.choices[0].message.content;
+    await saveMessage(1, userText, null, null, 'sent');
+    await saveMessage(1, answer, null, null, 'received');
+
+    return answer;
     } catch (err) {
         console.error("GPT 오류 : ", err);
         return "GPT 오류";
