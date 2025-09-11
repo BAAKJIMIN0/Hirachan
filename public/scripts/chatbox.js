@@ -22,6 +22,7 @@ function createMessageElement(text, type = "sent") {
 // 메시지 추가 및 스크롤 처리
 function appendMessage(messageElement) {
     chatContainer.appendChild(messageElement);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
     //saveChatToLocalStorage();
 }
 
@@ -144,6 +145,7 @@ function createTranslateBtn() {
                 <div class="meaning">해석: ${translatedText}</div>
             `;
             messageElement.appendChild(translationBox);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
             } catch(err) {
                 console.error(err);
             } finally {
@@ -151,6 +153,7 @@ function createTranslateBtn() {
             }
         } else {
             translationBox.style.display = translationBox.style.display === "none" ? "" : "none";
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     });
 
@@ -167,6 +170,10 @@ async function translate(message, direction) {
         box = document.createElement("div");
         box.classList.add("translation-preview");
         translationPreviewContainer.appendChild(box);
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
         if (direction === "kr-to-jp") {
             box.innerHTML = `
             <div class="furigana">원문: ${furiganaHtml}</div>

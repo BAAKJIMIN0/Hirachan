@@ -16,17 +16,22 @@ async function toFurigana(originalText) {
   if (!kuroshiro) {
     throw new Error("Kuroshiro not initialized. Call initFurigana() first.");
   }
-  const furiganaHtml = await kuroshiro.convert(originalText, { to: "hiragana", mode: "furigana" });
 
   const [rows] = await pool.execute(
-        'SELECT message_id FROM messages WHERE user_id = ? AND original = ? ORDER BY created_at DESC LIMIT 1',
-        [1, originalText]
-    );
+    'SELECT message_id, furigana FROM messages WHERE user_id = ? AND original = ? ORDER BY created_at DESC LIMIT 1',
+    [1, originalText]
+  );
 
+  if (rows.length > 0 && rows[0].furigana) {
+    return rows[0].furigana;
+  }
+
+  const furiganaHtml = await kuroshiro.convert(originalText, { to: "hiragana", mode: "furigana" });
   if (rows.length > 0) {
     const messageId = rows[0].message_id;
     await saveFurigana(messageId, furiganaHtml);
   }
+
   return furiganaHtml;
 }
 

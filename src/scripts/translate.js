@@ -13,9 +13,13 @@ async function translateGpt(originalText, direction) {
     }
 
     const [rows] = await pool.execute(
-        'SELECT message_id FROM messages WHERE user_id = ? AND original = ? ORDER BY created_at DESC LIMIT 1',
+        'SELECT message_id, translated FROM messages WHERE user_id = ? AND original = ? ORDER BY created_at DESC LIMIT 1',
         [1, originalText]
     );
+
+    if (rows.length > 0 && rows[0].translated) {
+        return rows[0].translated;
+    }
 
     const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
