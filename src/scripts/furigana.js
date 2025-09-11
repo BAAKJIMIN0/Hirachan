@@ -23,12 +23,10 @@ async function toFurigana(originalText) {
         [1, originalText]
     );
 
-  if (rows.length === 0) {
-        throw new Error("해당 메시지를 DB에서 찾을 수 없습니다.");
-    }
-  const messageId = rows[0].message_id;
-
-  await saveFurigana(messageId, furiganaHtml);
+  if (rows.length > 0) {
+    const messageId = rows[0].message_id;
+    await saveFurigana(messageId, furiganaHtml);
+  }
   return furiganaHtml;
 }
 

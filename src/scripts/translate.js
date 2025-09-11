@@ -17,11 +17,6 @@ async function translateGpt(originalText, direction) {
         [1, originalText]
     );
 
-    if (rows.length === 0) {
-        throw new Error("해당 메시지를 DB에서 찾을 수 없습니다.");
-    }
-    const messageId = rows[0].message_id;
-
     const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
@@ -30,8 +25,12 @@ async function translateGpt(originalText, direction) {
         ],
         max_tokens: 200
     });
+
     const translated = response.choices[0].message.content;
-    await saveTranslation(messageId, translated);
+    if (rows.length > 0) {
+        const messageId = rows[0].message_id;
+        await saveTranslation(messageId, translated);
+    }
     return translated;
 }
 
