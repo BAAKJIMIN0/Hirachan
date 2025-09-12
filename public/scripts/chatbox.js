@@ -142,8 +142,8 @@ function createTranslateBtn() {
                 translationBox = document.createElement("div");
                 translationBox.classList.add("translationBox");
                 translationBox.innerHTML = `
-                <div class="furigana">원문: ${furiganaHtml}</div>
-                <div class="meaning">해석: ${translatedText}</div>
+                <div class="furigana">${furiganaHtml}</div>
+                <div class="meaning">${translatedText}</div>
             `;
             messageElement.appendChild(translationBox);
             chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -177,14 +177,14 @@ async function translate(message, direction) {
         });
         if (direction === "kr-to-jp") {
             box.innerHTML = `
-            <div class="furigana">원문: ${furiganaHtml}</div>
-            <div class="meaning">해석: ${message}</div>
+            <div class="furigana">${furiganaHtml}</div>
+            <div class="meaning">${message}</div>
         `;
         }
         else if (direction === "jp-to-kr") {
             box.innerHTML = `
-                <div class="furigana">원문: ${furiganaHtml}</div>
-                <div class="meaning">해석: ${translatedText}</div>
+                <div class="furigana">${furiganaHtml}</div>
+                <div class="meaning">${translatedText}</div>
             `;
         }
         translationPreviewContainer.style.display = "block";

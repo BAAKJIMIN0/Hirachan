@@ -9,6 +9,22 @@ closeBtn.onclick = () => modal.style.display = "none";
 
 const loginForm = document.querySelector("#loginModal form");
 
+function updateLoginButton() {
+  const userId = localStorage.getItem("userId");
+  if (userId) {
+    loginBtn.textContent = "로그아웃";
+    loginBtn.onclick = logout;
+  } else {
+    loginBtn.textContent = "로그인";
+    loginBtn.onclick = () => modal.style.display = "block";
+  }
+}
+
+function logout() {
+  localStorage.removeItem("userId");
+  location.reload();
+}
+
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -28,6 +44,7 @@ loginForm.addEventListener("submit", async (e) => {
       alert("로그인 성공!");
       localStorage.setItem("userId", data.userId);
       modal.style.display = "none";
+      updateLoginButton();
       location.reload();
     } else {
       alert("로그인 실패: " + data.message);
@@ -39,6 +56,7 @@ loginForm.addEventListener("submit", async (e) => {
 });
 
 window.onload = function () {
+  updateLoginButton();
   google.accounts.id.initialize({
     client_id: '631095185833-skdoc8l4mn8oqfpvnu4ktvcu3ko1n5p1.apps.googleusercontent.com',
     callback: handleCredentialResponse
@@ -62,6 +80,7 @@ function handleCredentialResponse(response) {
       console.log("구글 로그인 성공:", data);
       localStorage.setItem("userId", data.userId);
       modal.style.display = "none";
+      updateLoginButton();
       location.reload();
     } else {
       console.error("로그인 실패:", data.message);
