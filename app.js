@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 const bcrypt = require('bcrypt');
 
 // 로그인
-app.post('/api/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   const { userid, password } = req.body;
 
   if (!userid || !password) {
