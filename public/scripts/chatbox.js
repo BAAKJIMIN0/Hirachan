@@ -63,12 +63,12 @@ function simulateTyping(fullText, speed = 20, callback) {
 }
 
 // 번역 API 호출 함수
-async function fetchTranslation(text, direction) {
+async function fetchTranslation(userId, text, direction) {
     try {
         const response = await fetch("/translate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text, direction })
+            body: JSON.stringify({ userId, text, direction })
         });
         const data = await response.json();
         return {
@@ -98,9 +98,10 @@ sendBtn.addEventListener("click", async () => {
     userInput.style.height = "40px";
     translationPreviewContainer.style.display = "none";
 
+    const userId = parseInt(localStorage.getItem("userId") || "0");
     try {
         const payload = {
-            userId: 1,
+            userId: userId,
             userText: message,
         };
         console.log("서버로 보낼 JSON:", payload);
@@ -136,7 +137,7 @@ function createTranslateBtn() {
             const messageText = messageElement.querySelector(".text").innerText;
             
             try {
-                const { translatedText, furiganaHtml } = await fetchTranslation(messageText, "jp-to-kr");
+                const { translatedText, furiganaHtml } = await fetchTranslation(storedUserId, messageText, "jp-to-kr");
 
                 translationBox = document.createElement("div");
                 translationBox.classList.add("translationBox");
@@ -166,7 +167,7 @@ async function translate(message, direction) {
     let box;
     
     try {
-        const { translatedText, furiganaHtml } = await fetchTranslation(message, direction);
+        const { translatedText, furiganaHtml } = await fetchTranslation(storedUserId, message, direction);
         box = document.createElement("div");
         box.classList.add("translation-preview");
         translationPreviewContainer.appendChild(box);
@@ -216,13 +217,10 @@ translateJpToKrBtn.addEventListener("click", () => {
 });
 
 // 초기 로드
-loadChatFromDB(1);
-
-
-
-
-
-
+const storedUserId = parseInt(localStorage.getItem("userId") || "0", 10);
+if (storedUserId > 0) {
+    loadChatFromDB(parseInt(storedUserId));
+}
 
 /* 로컬스토리지 관련
 // 로컬스토리지 저장

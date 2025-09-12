@@ -6,7 +6,7 @@ const prompts = {
   "jp-to-kr": "한국어로 번역한 문장만 써주세요."
 };
 
-async function translateGpt(originalText, direction) {
+async function translateGpt(userId, originalText, direction) {
     const systemPrompt = prompts[direction];
     if (!systemPrompt) {
         throw new Error("오류 : 잘못된 번역 방향 설정");
@@ -14,7 +14,7 @@ async function translateGpt(originalText, direction) {
 
     const [rows] = await pool.execute(
         'SELECT message_id, translated FROM messages WHERE user_id = ? AND original = ? ORDER BY created_at DESC LIMIT 1',
-        [1, originalText]
+        [userId, originalText]
     );
 
     if (rows.length > 0 && rows[0].translated) {

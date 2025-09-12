@@ -18,8 +18,8 @@ async function toFurigana(originalText) {
   }
 
   const [rows] = await pool.execute(
-    'SELECT message_id, furigana FROM messages WHERE user_id = ? AND original = ? ORDER BY created_at DESC LIMIT 1',
-    [1, originalText]
+    'SELECT message_id, furigana FROM messages WHERE original = ? ORDER BY created_at DESC LIMIT 1',
+    [originalText]
   );
 
   if (rows.length > 0 && rows[0].furigana) {

@@ -6,7 +6,7 @@ const promptForChat = `너의 이름은 히라쨩(ひらちゃん)이야.
 답은 실제 메신저로 대화하는 것처럼 너무 길지 않은 1~2문장으로 부탁해.
 `;
 
-async function chatGpt(userText, messages) {
+async function chatGpt(userId, userText, messages) {
     try {
         const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
@@ -18,8 +18,8 @@ async function chatGpt(userText, messages) {
         max_tokens: 500
     });
     const answer = response.choices[0].message.content;
-    await saveMessage(1, userText, null, null, 'sent');
-    await saveMessage(1, answer, null, null, 'received');
+    await saveMessage(userId, userText, null, null, 'sent');
+    await saveMessage(userId, answer, null, null, 'received');
 
     return answer;
     } catch (err) {

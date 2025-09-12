@@ -51,4 +51,15 @@ async function saveFurigana(messageId, furignanaHtml) {
   await pool.execute(sql, [furignanaHtml, messageId]);
 }
 
-module.exports = { pool, getMessages, saveMessage, saveTranslation, saveFurigana };
+async function getUserByUsername(username) {
+  const [rows] = await pool.execute(
+    `SELECT * FROM users WHERE username = ? LIMIT 1`,
+    [username]
+  );
+  return rows[0];
+}
+
+module.exports = { 
+  pool, getMessages, saveMessage, saveTranslation, saveFurigana, 
+  getUserByUsername 
+};

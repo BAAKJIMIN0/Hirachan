@@ -1,4 +1,7 @@
 const logo = document.getElementById("logo");
+const loginBtn = document.getElementById("loginBtn");
+const modal = document.getElementById("loginModal");
+const closeBtn = document.querySelector("closeBtn");
 const chatContainer = document.getElementById("chat-container");
 const translationPreviewContainer = document.getElementById("translation-preview-container");
 const userInput = document.getElementById("user-input");

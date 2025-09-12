@@ -9,6 +9,7 @@
 }
 
 body {
+    width: 100%;
     margin: 0;
     padding: 0;
     background-color: var(--color-background);
@@ -31,13 +32,13 @@ body {
     left: 0;
     z-index: 1000;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
 .header-content {
-    max-width: 1200px;
     padding: 15px 0px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -52,6 +53,101 @@ body {
     text-decoration: none;
     color: var(--color-white);
     cursor: pointer;
+}
+
+#loginBtn {
+    padding: 8px 18px;
+    background: #3498db;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#loginBtn:hover {
+    background: #2980b9;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1200;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--color-white);
+  width: 320px;
+  margin: 12% auto;
+  padding: 25px 20px;
+  align-items: center;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  position: relative;
+  animation: fadeInUp 0.3s ease;
+}
+
+.modal-content h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  text-align: center;
+  color: var(--color-black);
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--color-black);
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 12px;
+  background: #3498db;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-submit:hover {
+  background: #2980b9;
+}
+
+#closeBtn {
+  position: absolute;
+  top: 12px; right: 16px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+#closeBtn:hover {
+  color: #000;
 }
 
 .container {

@@ -1,4 +1,4 @@
-// npm install express openai dotenv mysql12 kuroshiro kuroshiro-analyzer-kuromoji
+// npm install express openai dotenv mysql12 kuroshiro kuroshiro-analyzer-kuromoji bcrypt
 require('dotenv').config();
 
 const express = require('express');
@@ -7,7 +7,7 @@ const app = express();
 const { translateGpt } = require('./src/scripts/translate.js');
 const { chatGpt } = require('./src/scripts/chatbot.js');
 const { initFurigana, toFurigana } = require('./src/scripts/furigana.js');
-const { getMessages } = require('./src/scripts/db.js');
+const { getUserByUsername, getMessages } = require('./src/scripts/db.js');
 
 // 정적 파일 제공 (public 폴더)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -20,6 +20,34 @@ initFurigana()
 // API 예시
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+const bcrypt = require('bcrypt');
+
+// 로그인
+app.post('/api/login', async (req, res) => {
+  const { userid, password } = req.body;
+
+  if (!userid || !password) {
+    return res.status(400).json({ success: false, message: '아이디와 비밀번호를 입력하세요.' });
+  }
+
+  try {
+    const user = await getUserByUsername(userid);
+    if (!user) {
+      return res.json({ success: false, message: '존재하지 않는 사용자입니다.' });
+    }
+
+    const valid = password === user.password;
+    if (!valid) {
+      return res.json({ success: false, message: '비밀번호가 올바르지 않습니다.' });
+    }
+
+    res.json({ success: true, userId: user.user_id, username: user.username });
+  } catch (err) {
+    console.error("로그인 오류:", err);
+    res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
+  }
 });
 
 // 대화 불러오기
@@ -37,14 +65,14 @@ app.get('/messages/:userId', async (req, res) => {
 
 // 번역 요청
 app.post('/translate', async (req, res) => {
-  const { text, direction } = req.body;
+  const { userId, text, direction } = req.body;
 
   if (!text) {
     return res.status(400).json({ error: '텍스트가 존재하지 않습니다.' })
   }
   
   try {
-    const translatedText = await translateGpt(text, direction);
+    const translatedText = await translateGpt(userId, text, direction);
     const targetText = direction === "kr-to-jp" ? translatedText : text;
     const furiganaHtml = await toFurigana(targetText);
     
@@ -62,7 +90,7 @@ app.post('/translate', async (req, res) => {
 
 // 채팅 요청
 app.post('/chat', async (req, res) => {
-    const { userText, userId } = req.body;
+    const { userId, userText } = req.body;
 
     if (!userText) return res.status(400).json({ error: '텍스트가 존재하지 않습니다.' });
 
@@ -74,7 +102,7 @@ app.post('/chat', async (req, res) => {
             content: msg.text
         }));
 
-        const answer = await chatGpt(userText, messages);
+        const answer = await chatGpt(userId, userText, messages);
         res.json({ original: userText, answer });
     } catch (err) {
         console.error(err);
