@@ -11,6 +11,16 @@ const pool = mysql.createPool({
   charset: 'utf8mb4'
 });
 
+async function createUser(userName, email) {
+  const [result] = await pool.execute(
+    `INSERT INTO users (username, nickname, email) VALUES (?, ?, ?)`,
+    [userName, userName, email]
+  );
+
+  const userId = result.insertId;
+  return { user_id: userId, username: userName, email };
+}
+
 // 메시지 가져오기
 async function getMessages(userId) {
   const [rows] = await pool.execute(
@@ -60,6 +70,6 @@ async function getUserByUsername(username) {
 }
 
 module.exports = { 
-  pool, getMessages, saveMessage, saveTranslation, saveFurigana, 
+  pool, createUser, getMessages, saveMessage, saveTranslation, saveFurigana, 
   getUserByUsername 
 };

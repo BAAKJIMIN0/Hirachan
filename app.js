@@ -1,4 +1,4 @@
-// npm install express openai dotenv mysql12 kuroshiro kuroshiro-analyzer-kuromoji bcrypt
+// npm install express openai dotenv mysql12 kuroshiro kuroshiro-analyzer-kuromoji bcrypt google-auth-library
 require('dotenv').config();
 
 const express = require('express');
@@ -7,7 +7,7 @@ const app = express();
 const { translateGpt } = require('./src/scripts/translate.js');
 const { chatGpt } = require('./src/scripts/chatbot.js');
 const { initFurigana, toFurigana } = require('./src/scripts/furigana.js');
-const { getUserByUsername, getMessages } = require('./src/scripts/db.js');
+const { createUser, getUserByUsername, getMessages } = require('./src/scripts/db.js');
 
 // 정적 파일 제공 (public 폴더)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -49,6 +49,38 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
   }
 });
+
+const { OAuth2Client } = require('google-auth-library');
+const googleClientId = '631095185833-skdoc8l4mn8oqfpvnu4ktvcu3ko1n5p1.apps.googleusercontent.com'
+const googleClient = new OAuth2Client(googleClientId);
+
+// 구글 로그인
+app.post('/googleLogin', async (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ success: false, message: '토큰이 없습니다.' });
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: googleClientId
+    });
+
+    const payload = ticket.getPayload();
+    const username = payload.email.split('@')[0];
+    const userEmail = payload.email;
+
+    let user = await getUserByUsername(username);
+    if (!user) {
+      user = await createUser(username, userEmail);
+    }
+
+    res.json({ success: true, userId: user?.user_id || null, userEmail, username });
+  } catch (err) {
+    console.error("구글 로그인 검증 오류:", err);
+    res.status(401).json({ success: false, message: '토큰 검증 실패' });
+  }
+});
+
 
 // 대화 불러오기
 app.get('/messages/:userId', async (req, res) => {
