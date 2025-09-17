@@ -2,6 +2,13 @@ autoChangeBtn.addEventListener("click", () => {
   autoChangeBtn.classList.toggle("active");
 });
 
+userInput.addEventListener("keydown", (e) => {
+    if (e.key === "Tab") {
+        e.preventDefault();
+        autoChangeBtn.click();
+    }
+});
+
 function hiraToKata(str) {
   return [...str].map(ch => {
     const code = ch.charCodeAt(0);
