@@ -262,6 +262,7 @@ body {
     width: 100%;
     padding: 0px 16px;
     margin-bottom: 0px;
+    box-sizing: border-box;
 }
 
 .translation-preview {
