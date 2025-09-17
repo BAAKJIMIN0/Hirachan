@@ -6,7 +6,7 @@ const pool = mysql.createPool({
   password: '0679',
   database: 'hirachan',
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 100,
   queueLimit: 0,
   charset: 'utf8mb4'
 });
@@ -17,6 +17,14 @@ async function updateLastLogin(userId) {
     [userId]
   );
   return result;
+}
+
+async function decreaseCredits(userId, amount) {
+  const [result] = await pool.execute(
+    `UPDATE users SET credits = credits - ? WHERE user_id = ? AND credits >= ?`,
+    [amount, userId, amount]
+  );
+  return result.affectedRows > 0;
 }
 
 async function createUser(nickname, userName) {
@@ -78,6 +86,6 @@ async function getUserByUsername(username) {
 }
 
 module.exports = { 
-  pool, updateLastLogin, createUser, getMessages, saveMessage, saveTranslation, saveFurigana, 
-  getUserByUsername
+  pool, updateLastLogin, decreaseCredits, createUser, getMessages, saveMessage,
+  saveTranslation, saveFurigana, getUserByUsername
 };

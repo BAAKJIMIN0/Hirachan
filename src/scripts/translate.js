@@ -1,5 +1,5 @@
 const openai = require('./callGpt.js');
-const { pool, saveTranslation } = require('./db.js');
+const { pool, decreaseCredits, saveTranslation } = require('./db.js');
 
 const prompts = {
   "kr-to-jp": "일본어로 번역한 문장만 써주세요.",
@@ -20,6 +20,9 @@ async function translateGpt(userId, originalText, direction) {
     if (rows.length > 0 && rows[0].translated) {
         return rows[0].translated;
     }
+
+    const isCredit = await decreaseCredits(userId, 1);
+    if (!isCredit) { return '크레딧이 부족합니다.' };
 
     const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
