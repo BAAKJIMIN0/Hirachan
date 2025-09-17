@@ -277,13 +277,13 @@ body {
 }
 
 .translation-preview .furigana ruby,
-.translationBox .furigana ruby {
-    font-size: 20px;
+.text ruby {
+    font-size: 24px;
     font-weight: bold;
 }
 
 .translation-preview .furigana ruby rt,
-.translationBox .furigana ruby rt {
+.text ruby rt {
     font-size: 16px;
     color: #555;
 }

@@ -121,7 +121,6 @@ sendBtn.addEventListener("click", async () => {
     }
 });
 
-// 번역 버튼 생성
 function createTranslateBtn() {
     const btn = document.createElement("button");
     btn.classList.add("translate-btn");
@@ -130,39 +129,47 @@ function createTranslateBtn() {
     btn.addEventListener("click", async () => {
         const messageElement = btn.closest(".message");
         if (messageElement.dataset.translating === "true") return;
+
+        const textElement = messageElement.querySelector(".text");
         let translationBox = messageElement.querySelector(".translationBox");
 
-        if (!translationBox) {
-            messageElement.dataset.translating = "true";
-            const messageText = messageElement.querySelector(".text").innerText;
-            
-            try {
-                const { translatedText, furiganaHtml } = await fetchTranslation(storedUserId, messageText, "jp-to-kr");
+        if (translationBox) {
+            const isHidden = translationBox.style.display === "none";
+            translationBox.style.display = isHidden ? "" : "none";
+            textElement.innerHTML = isHidden ? textElement.dataset.furigana : textElement.dataset.original;
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return;
+        }
 
-                translationBox = document.createElement("div");
-                translationBox.classList.add("translationBox");
-                translationBox.innerHTML = `
-                <div class="furigana">${furiganaHtml}</div>
-                <div class="meaning">${translatedText}</div>
-            `;
+        messageElement.dataset.translating = "true";
+        const messageText = textElement.innerText;
+
+        try {
+            const { translatedText, furiganaHtml } = await fetchTranslation(storedUserId, messageText, "jp-to-kr");
+
+            textElement.dataset.original = messageText;
+            textElement.dataset.furigana = furiganaHtml;
+            textElement.innerHTML = furiganaHtml;
+            translationBox = document.createElement("div");
+            translationBox.classList.add("translationBox");
+            translationBox.innerHTML = `<div class="meaning">${translatedText}</div>`;
             messageElement.appendChild(translationBox);
+
             chatContainer.scrollTop = chatContainer.scrollHeight;
-            } catch(err) {
-                console.error(err);
-            } finally {
-                messageElement.dataset.translating = "false";
-            }
-        } else {
-            translationBox.style.display = translationBox.style.display === "none" ? "" : "none";
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+        } catch (err) {
+            console.error(err);
+        } finally {
+            messageElement.dataset.translating = "false";
         }
     });
 
     return btn;
 }
 
+
 async function translate(message, direction) {
     if (!message) return alert("메시지를 입력해주세요.");
+    userInput.dataset.translating = "true";
     translationPreviewContainer.innerHTML = "";
     let box;
     
@@ -204,16 +211,12 @@ async function translate(message, direction) {
 // 번역 버튼 이벤트
 translateKrToJpBtn.addEventListener("click", () => {
     if (userInput.dataset.translating === "true") return;
-    userInput.dataset.translating = "true";
     translate(userInput.value.trim(), "kr-to-jp")
-        .finally(() => { userInput.dataset.translating = "false"; });
 });
 
 translateJpToKrBtn.addEventListener("click", () => {
     if (userInput.dataset.translating === "true") return;
-    userInput.dataset.translating = "true";
     translate(userInput.value.trim(), "jp-to-kr")
-        .finally(() => { userInput.dataset.translating = "false"; });
 });
 
 // 초기 로드
