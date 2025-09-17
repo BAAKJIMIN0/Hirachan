@@ -11,14 +11,22 @@ const pool = mysql.createPool({
   charset: 'utf8mb4'
 });
 
-async function createUser(userName, email) {
+async function updateLastLogin(userId) {
+  const [result] = await pool.execute(
+    `UPDATE users SET last_login = NOW() WHERE user_id = ?`,
+    [userId]
+  );
+  return result;
+}
+
+async function createUser(nickname, userName) {
   const [result] = await pool.execute(
     `INSERT INTO users (username, nickname, email) VALUES (?, ?, ?)`,
-    [userName, userName, email]
+    [userName, nickname, userName]
   );
 
   const userId = result.insertId;
-  return { user_id: userId, username: userName, email };
+  return { user_id: userId, username: userName, email: userName };
 }
 
 // 메시지 가져오기
@@ -70,6 +78,6 @@ async function getUserByUsername(username) {
 }
 
 module.exports = { 
-  pool, createUser, getMessages, saveMessage, saveTranslation, saveFurigana, 
-  getUserByUsername 
+  pool, updateLastLogin, createUser, getMessages, saveMessage, saveTranslation, saveFurigana, 
+  getUserByUsername
 };
