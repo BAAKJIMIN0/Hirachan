@@ -137,7 +137,9 @@ function createTranslateBtn() {
             const isHidden = translationBox.style.display === "none";
             translationBox.style.display = isHidden ? "" : "none";
             textElement.innerHTML = isHidden ? textElement.dataset.furigana : textElement.dataset.original;
+            if (messageElement === chatContainer.lastElementChild) {
             chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
             return;
         }
 
@@ -154,8 +156,9 @@ function createTranslateBtn() {
             translationBox.classList.add("translationBox");
             translationBox.innerHTML = `<div class="meaning">${translatedText}</div>`;
             messageElement.appendChild(translationBox);
-
+            if (messageElement === chatContainer.lastElementChild) {
             chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
         } catch (err) {
             console.error(err);
         } finally {
