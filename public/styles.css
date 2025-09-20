@@ -12,12 +12,13 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
+    display: flex;
     background-color: var(--color-background);
     font-family: 'Apple SD Gothic Neo', sans-serif;
-    display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
+    height: 98vh;
 }
 
 /* 헤더 */
@@ -25,12 +26,8 @@ body {
     width: 100%;
     background-color: var(--color-theme);
     color: var(--color-white);
-    position: fixed;
     padding-left: 25px;
     padding-right: 25px;
-    top: 0;
-    left: 0;
-    z-index: 1000;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
 }
@@ -160,10 +157,10 @@ body {
 .container {
     width: 100%;
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    height: calc(100vh - 80px - 60px);
     padding: 20px 20px 0 20px;
     box-sizing: border-box;
 }
@@ -377,11 +374,12 @@ body {
     background-color: var(--color-black);
     color: var(--color-white);
     text-align: center;
-    padding: 15px 20px;
+    padding: 20px 20px;
+    margin-top : 20px;
 }
 
 .footer-content {
-    margin: 0 auto;
+    margin: 0 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
