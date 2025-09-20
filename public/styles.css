@@ -165,7 +165,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 90px 20px 80px 20px;
+    padding: 90px 20px 0px 20px;
     box-sizing: border-box;
 }
 
@@ -379,9 +379,8 @@ body {
     color: var(--color-white);
     text-align: center;
     padding: 20px 20px;
-    position: fixed;  /* 하단 고정 */
-    bottom: 0;
-    left: 0;
+    position: static;
+    margin-top: 20px;
     z-index: 100;
 }
 
