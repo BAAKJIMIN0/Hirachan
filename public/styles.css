@@ -16,9 +16,7 @@ body {
     display: flex;
     background-color: var(--color-background);
     font-family: 'Apple SD Gothic Neo', sans-serif;
-    justify-content: center;
     flex-direction: column;
-    align-items: center;
 }
 
 /* 헤더 */
