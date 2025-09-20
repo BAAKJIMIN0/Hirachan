@@ -161,7 +161,7 @@ body {
 .container {
     width: 100%;
     display: flex;
-    flex: 1;
+    height: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
@@ -172,7 +172,7 @@ body {
 /* 채팅 영역 */
 .chat-frame {
     width: 100%;
-    flex: 1;
+    height: 100%;
     background-color: var(--color-white);
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
