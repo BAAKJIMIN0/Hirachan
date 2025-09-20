@@ -127,6 +127,6 @@ app.use((err, req, res, next) => {
 
 // 서버 시작
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
 });
