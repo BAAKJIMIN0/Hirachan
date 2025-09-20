@@ -24,13 +24,16 @@ body {
 /* 헤더 */
 #main-header {
     width: 100%;
-    flex: 0 0 auto;
     background-color: var(--color-theme);
     color: var(--color-white);
     padding-left: 25px;
     padding-right: 25px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
 }
 
 .header-content {
@@ -162,7 +165,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 20px 20px 0 20px;
+    padding: 90px 20px 80px 20px;
     box-sizing: border-box;
 }
 
@@ -376,7 +379,10 @@ body {
     color: var(--color-white);
     text-align: center;
     padding: 20px 20px;
-    margin-top : 20px;
+    position: fixed;  /* 하단 고정 */
+    bottom: 0;
+    left: 0;
+    z-index: 100;
 }
 
 .footer-content {
