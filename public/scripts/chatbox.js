@@ -29,7 +29,7 @@ function appendMessage(messageElement) {
 // 데이터베이스 불러오기
 async function loadChatFromDB(userId) {
     try {
-        const res = await fetch(`http://localhost:3000/messages/${userId}`);
+        const res = await fetch(`/messages/${userId}`);
         const data = await res.json();
 
         data.forEach(msg => {
