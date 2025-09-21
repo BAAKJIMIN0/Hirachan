@@ -48,7 +48,7 @@ async function getMessages(userId) {
       ORDER BY message_id DESC
       LIMIT 20
     ) AS sub
-    ORDER BY created_at ASC',
+    ORDER BY created_at ASC`,
     [userId]
   );
   return rows;
