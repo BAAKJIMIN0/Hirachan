@@ -43,7 +43,7 @@ async function getMessages(userId) {
     `SELECT original AS text, state AS class_name, created_at
      FROM messages
      WHERE user_id = ?
-     ORDER BY message_id
+     ORDER BY created_at DESC
      LIMIT 20`,
     [userId]
   );
