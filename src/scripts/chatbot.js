@@ -8,7 +8,7 @@ const promptForChat = `너의 이름은 히라쨩(ひらちゃん)이야.
 
 async function chatGpt(userId, userText, messages) {
     try {
-        const isCredit = await decreaseCredits(userId, 2);
+        const isCredit = await decreaseCredits(userId, 1);
         if (!isCredit) { return '크레딧이 부족합니다.' };
 
         const response = await openai.chat.completions.create({
