@@ -44,7 +44,7 @@ async function getMessages(userId) {
       FROM (
       SELECT original AS text, state AS class_name, message_id
       FROM messages
-      WHERE user_id = 8
+      WHERE user_id = ?
       ORDER BY message_id DESC
       LIMIT 20
     ) AS sub
