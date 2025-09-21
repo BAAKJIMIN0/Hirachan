@@ -40,11 +40,15 @@ async function createUser(nickname, userName) {
 // 메시지 가져오기
 async function getMessages(userId) {
   const [rows] = await pool.execute(
-    `SELECT original AS text, state AS class_name, created_at
-     FROM messages
-     WHERE user_id = ?
-     ORDER BY created_at DESC
-     LIMIT 20`,
+    `SELECT *
+      FROM (
+      SELECT original AS text, state AS class_name, created_at
+      FROM messages
+      WHERE user_id = ?
+      ORDER BY message_id DESC
+      LIMIT 20
+    ) AS sub
+    ORDER BY created_at ASC',
     [userId]
   );
   return rows;
