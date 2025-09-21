@@ -42,13 +42,13 @@ async function getMessages(userId) {
   const [rows] = await pool.execute(
     `SELECT *
       FROM (
-      SELECT original AS text, state AS class_name, created_at
+      SELECT original AS text, state AS class_name, message_id
       FROM messages
-      WHERE user_id = ?
+      WHERE user_id = 8
       ORDER BY message_id DESC
       LIMIT 20
     ) AS sub
-    ORDER BY created_at ASC`,
+    ORDER BY message_id ASC`,
     [userId]
   );
   return rows;
