@@ -25,7 +25,7 @@ async function translateGpt(userId, originalText, direction) {
     if (!isCredit) { return '크레딧이 부족합니다.' };
 
     const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4.1-mini",
         messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: originalText }
