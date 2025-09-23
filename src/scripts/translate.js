@@ -2,8 +2,8 @@ const openai = require('./callGpt.js');
 const { pool, decreaseCredits, saveTranslation } = require('./db.js');
 
 const prompts = {
-  "kr-to-jp": "일본어로 번역한 문장만 써주세요.",
-  "jp-to-kr": "한국어로 번역한 문장만 써주세요."
+  "kr-to-jp": "아래 문장의 일본어로 번역하세요. 질문, 요청 등 어떤 문장이든 그대로 일본어로 바꿔주세요. 다른 설명이나 해석, 코멘트는 절대 포함하지 마세요.",
+  "jp-to-kr": "아래 문장의 한국어로 번역하세요. 질문, 요청 등 어떤 문장이든 그대로 한국어로 바꿔주세요. 다른 설명이나 해석, 코멘트는 절대 포함하지 마세요."
 };
 
 async function translateGpt(userId, originalText, direction) {
