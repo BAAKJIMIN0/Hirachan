@@ -121,6 +121,14 @@ sendBtn.addEventListener("click", async () => {
     }
 });
 
+// 엔터키 입력 이벤트
+userInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendBtn.click();
+    }
+});
+
 function createTranslateBtn() {
     const btn = document.createElement("button");
     btn.classList.add("translate-btn");
